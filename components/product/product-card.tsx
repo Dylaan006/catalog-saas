@@ -45,20 +45,20 @@ export function ProductCard({ storeSlug, product }: ProductCardProps) {
             </div>
 
             {/* Bottom Content - Frosted Glass */}
-            <div className="absolute bottom-4 left-4 right-4 z-10 flex flex-col">
-                <div className="backdrop-blur-xl bg-white/10 border border-white/20 p-4 md:p-5 rounded-[1.5rem] shadow-2xl transform translate-y-2 group-hover:translate-y-0 transition-all duration-500">
-                    <div className="flex flex-col gap-2 mb-2 w-full">
-                        <h3 className="text-white text-base md:text-xl font-black leading-tight line-clamp-2 drop-shadow-lg w-full">
+            <div className="absolute bottom-3 left-3 right-3 z-10 flex flex-col">
+                <div className="backdrop-blur-xl bg-white/10 border border-white/20 p-3 md:p-4 rounded-[1.2rem] shadow-2xl transform translate-y-2 group-hover:translate-y-0 transition-all duration-500">
+                    <div className="flex flex-col w-full">
+                        <h3 className="text-white text-sm md:text-lg font-black leading-tight line-clamp-1 group-hover:line-clamp-2 drop-shadow-lg w-full mb-1">
                             {product.name}
                         </h3>
                         <div className="flex justify-start">
-                            <p className="text-white font-black text-sm md:text-lg bg-black/40 px-3 py-1 rounded-full drop-shadow-md">
+                            <p className="text-white font-black text-xs md:text-sm bg-black/40 px-2.5 py-1 rounded-full drop-shadow-md">
                                 {formattedPrice}
                             </p>
                         </div>
                     </div>
 
-                    <p className="text-gray-200 text-xs md:text-sm line-clamp-2 transform opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-out font-medium drop-shadow-sm h-0 group-hover:h-auto overflow-hidden">
+                    <p className="text-gray-200 text-[10px] md:text-xs line-clamp-2 transform opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-out font-medium drop-shadow-sm h-0 group-hover:h-auto overflow-hidden group-hover:mt-2">
                         {product.description}
                     </p>
                 </div>
