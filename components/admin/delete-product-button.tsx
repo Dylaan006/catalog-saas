@@ -6,17 +6,18 @@ import { ConfirmModal } from '@/components/ui/confirm-modal';
 import { deleteProduct } from '@/lib/actions';
 
 interface DeleteProductButtonProps {
+    storeId: string;
     productId: string;
     productName: string;
 }
 
-export function DeleteProductButton({ productId, productName }: DeleteProductButtonProps) {
+export function DeleteProductButton({ storeId, productId, productName }: DeleteProductButtonProps) {
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
     const handleDelete = async () => {
         setIsDeleting(true);
-        await deleteProduct(productId);
+        await deleteProduct(storeId, productId);
         setIsDeleting(false);
         setIsConfirmOpen(false);
     };

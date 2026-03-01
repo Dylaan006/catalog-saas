@@ -1,8 +1,8 @@
 import { prisma } from '@/lib/db';
 import { Product } from '@prisma/client';
 
-export async function getProducts(query?: string, category?: string, sort?: string) {
-    const where: any = {};
+export async function getProducts(storeId: string, query?: string, category?: string, sort?: string) {
+    const where: any = { storeId: storeId };
 
     if (query) {
         where.OR = [
@@ -39,8 +39,9 @@ export async function getProductById(id: string) {
     });
 }
 
-export async function getCategories() {
+export async function getCategories(storeId: string) {
     const products = await prisma.product.findMany({
+        where: { storeId },
         select: { category: true },
         distinct: ['category'],
     });
@@ -65,9 +66,10 @@ export async function getUserOrders(userId: string) {
     }
 }
 
-export async function getAllOrders() {
+export async function getAllOrders(storeId: string) {
     try {
         const orders = await prisma.order.findMany({
+            where: { storeId },
             include: {
                 user: true,
                 items: {

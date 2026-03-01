@@ -11,19 +11,33 @@ export default async function StoreConfigPage() {
         redirect('/');
     }
 
+    // We need the admin's storeId. Let's fetch it from the database based on their user ID.
+    // For now, assuming they have at least one store.
+    const userStore = await prisma.store.findFirst({
+        where: { userId: session.user.id }
+    });
+
+    if (!userStore) {
+        return <div className="p-8 text-center text-red-500">Error: No tienes una tienda asignada a tu cuenta.</div>;
+    }
+
     // Fetch existing config
     let config = null;
     try {
-        // @ts-ignore
-        const configs = await prisma.$queryRaw`SELECT * FROM StoreConfig LIMIT 1`;
-        config = Array.isArray(configs) ? configs[0] : null;
+        const storeConfigs = await prisma.storeConfig.findMany({
+            where: { storeId: userStore.id },
+            take: 1
+        });
+        config = storeConfigs.length > 0 ? storeConfigs[0] : null;
     } catch (e) {
         console.error('Error fetching store config:', e);
     }
 
+    const updateStoreConfigWithId = updateStoreConfig.bind(null, userStore.id);
+
     return (
         <div className="py-8 px-4 sm:px-6 lg:px-8 bg-gray-50 min-h-screen">
-            <StoreConfigForm config={config} action={updateStoreConfig} />
+            <StoreConfigForm config={config} action={updateStoreConfigWithId} />
         </div>
     );
 }

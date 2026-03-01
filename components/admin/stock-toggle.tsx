@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { toggleProductStock } from '@/lib/actions';
 
-export function StockToggle({ productId, initialInStock }: { productId: string; initialInStock: boolean }) {
+export function StockToggle({ storeId, productId, initialInStock }: { storeId: string; productId: string; initialInStock: boolean }) {
     const [inStock, setInStock] = useState(initialInStock);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -15,7 +15,7 @@ export function StockToggle({ productId, initialInStock }: { productId: string; 
             // Optimistic update
             setInStock(newState);
 
-            const result = await toggleProductStock(productId, newState);
+            const result = await toggleProductStock(storeId, productId, newState);
             if (!result.success) {
                 // Revert if error
                 setInStock(!newState);

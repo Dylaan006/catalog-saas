@@ -10,7 +10,7 @@ import { Product } from '@prisma/client';
 
 // --- ORDER ACTION ---
 
-export async function createOrder(cartItems: { productId: string; quantity: number }[], total: number) {
+export async function createOrder(storeId: string, cartItems: { productId: string; quantity: number }[], total: number) {
     const session = await auth();
 
     if (!session || !session.user || !session.user.id) {
@@ -24,7 +24,10 @@ export async function createOrder(cartItems: { productId: string; quantity: numb
     try {
         const productIds = cartItems.map(item => item.productId);
         const products = await prisma.product.findMany({
-            where: { id: { in: productIds } },
+            where: {
+                id: { in: productIds },
+                storeId: storeId
+            },
         });
 
         let serverTotal = 0;
@@ -46,6 +49,7 @@ export async function createOrder(cartItems: { productId: string; quantity: numb
         const order = await prisma.order.create({
             data: {
                 userId: session.user.id,
+                storeId: storeId,
                 total: serverTotal,
                 status: 'PENDING',
                 items: {
@@ -58,9 +62,9 @@ export async function createOrder(cartItems: { productId: string; quantity: numb
         revalidatePath('/profile');
 
         try {
-            // @ts-ignore
-            const storeConfigs = await prisma.$queryRaw`SELECT * FROM StoreConfig LIMIT 1`;
-            const config = Array.isArray(storeConfigs) ? storeConfigs[0] : null;
+            const config = await prisma.storeConfig.findUnique({
+                where: { storeId: storeId }
+            });
 
             const emailOrder = {
                 ...order,
@@ -137,8 +141,10 @@ async function saveImages(formData: FormData, fieldName: string = 'images'): Pro
     return savedPaths;
 }
 
-export async function createProduct(formData: FormData) {
+export async function createProduct(storeId: string, formData: FormData) {
     const session = await auth();
+    // @ts-ignore
+    if (session?.user?.role !== 'ADMIN') return { success: false, error: 'No autorizado' };
 
     const inStock = formData.get('inStock') === 'on';
 
@@ -171,6 +177,7 @@ export async function createProduct(formData: FormData) {
 
     await prisma.product.create({
         data: {
+            storeId,
             name,
             description,
             price,
@@ -188,8 +195,10 @@ export async function createProduct(formData: FormData) {
     return { success: true, redirectUrl: '/admin/productos' };
 }
 
-export async function updateProduct(id: string, formData: FormData) {
+export async function updateProduct(id: string, storeId: string, formData: FormData) {
     const session = await auth();
+    // @ts-ignore
+    if (session?.user?.role !== 'ADMIN') return { success: false, error: 'No autorizado' };
 
     const inStock = formData.get('inStock') === 'on';
 
@@ -234,7 +243,7 @@ export async function updateProduct(id: string, formData: FormData) {
     };
 
     await prisma.product.update({
-        where: { id },
+        where: { id, storeId }, // Asegurar que sea el producto de SU tienda
         data,
     });
 
@@ -248,14 +257,14 @@ export async function updateProduct(id: string, formData: FormData) {
 
 // ... existing actions
 
-export async function deleteProduct(id: string) {
+export async function deleteProduct(id: string, storeId: string) {
     const session = await auth();
     // @ts-ignore
     if (session?.user?.role !== 'ADMIN') return;
 
-    // Get product images before deleting
+    // Get product images before deleting, ensuring it belongs to the store
     const product = await prisma.product.findUnique({
-        where: { id },
+        where: { id, storeId },
         select: { images: true },
     });
 
@@ -281,14 +290,14 @@ export async function deleteProduct(id: string) {
     }
 
     await prisma.product.delete({
-        where: { id },
+        where: { id, storeId },
     });
 
     revalidatePath('/');
     revalidatePath('/admin/productos');
 }
 
-export async function updateOrderStatus(orderId: string, newStatus: string) {
+export async function updateOrderStatus(orderId: string, storeId: string, newStatus: string) {
     const session = await auth();
 
     // @ts-ignore
@@ -298,7 +307,7 @@ export async function updateOrderStatus(orderId: string, newStatus: string) {
 
     try {
         await prisma.order.update({
-            where: { id: orderId },
+            where: { id: orderId, storeId },
             data: { status: newStatus },
         });
 
@@ -311,7 +320,7 @@ export async function updateOrderStatus(orderId: string, newStatus: string) {
     }
 }
 
-export async function toggleProductStock(id: string, inStock: boolean) {
+export async function toggleProductStock(id: string, storeId: string, inStock: boolean) {
     const session = await auth();
     // @ts-ignore
     if (session?.user?.role !== 'ADMIN') {
@@ -320,7 +329,7 @@ export async function toggleProductStock(id: string, inStock: boolean) {
 
     try {
         await prisma.product.update({
-            where: { id },
+            where: { id, storeId },
             data: { inStock },
         });
 
@@ -333,7 +342,7 @@ export async function toggleProductStock(id: string, inStock: boolean) {
     }
 }
 
-export async function updateStoreConfig(formData: FormData) {
+export async function updateStoreConfig(storeId: string, formData: FormData) {
     const session = await auth();
     // @ts-ignore
     if (session?.user?.role !== 'ADMIN') {
@@ -369,8 +378,9 @@ export async function updateStoreConfig(formData: FormData) {
 
         // @ts-ignore
         await prisma.storeConfig.upsert({
-            where: { id: 1 },
+            where: { storeId: storeId },
             create: {
+                storeId,
                 storeName, description,
                 logoUrl: finalLogoUrl,
                 heroTitle, heroSubtitle, heroImageUrls: finalHeroImages,

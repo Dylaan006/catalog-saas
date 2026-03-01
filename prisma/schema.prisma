@@ -10,8 +10,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Store {
+  id          String       @id @default(cuid())
+  name        String
+  slug        String       @unique
+  userId      String // Owner of the store
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  products    Product[]
+  orders      Order[]
+  storeConfig StoreConfig? // Relación One-to-One
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
 model Product {
   id             String      @id @default(cuid())
+  storeId        String
+  store          Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
   name           String
   description    String
   price          Float
@@ -36,18 +51,21 @@ model User {
   password    String
   name        String
   phoneNumber String?
-  role        String   @default("USER") // ADMIN, USER
+  role        String   @default("USER") // SUPERADMIN, ADMIN, USER
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  orders      Order[]
+  stores      Store[] // A user can own multiple stores (if ADMIN)
+  orders      Order[] // A user can make multiple orders (as customer)
 }
 
 model Order {
   id        String      @id @default(cuid())
+  storeId   String
+  store     Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
   total     Float
   status    String      @default("PENDING") // PENDING, COMPLETED, CANCELLED
-  userId    String
-  user      User        @relation(fields: [userId], references: [id])
+  userId    String // Customer who made the order
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   items     OrderItem[]
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
@@ -59,13 +77,15 @@ model OrderItem {
   price       Float
   productName String?
   orderId     String
-  order       Order    @relation(fields: [orderId], references: [id])
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   productId   String?
   product     Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
 }
 
 model StoreConfig {
-  id          Int     @id @default(1) // Singleton pattern, always ID 1
+  id          String  @id @default(cuid())
+  storeId     String  @unique
+  store       Store   @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeName   String  @default("Pixel Catalog")
   description String  @default("Tienda de productos")
   logoUrl     String?

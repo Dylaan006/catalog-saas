@@ -7,12 +7,13 @@ import { updateOrderStatus } from '@/lib/actions';
 import { ConfirmModal } from '@/components/ui/confirm-modal';
 
 interface OrderDetailsModalProps {
+    storeId: string;
     order: any; // Ideally typed with Prisma includes
     isOpen: boolean;
     onClose: () => void;
 }
 
-export function OrderDetailsModal({ order, isOpen, onClose }: OrderDetailsModalProps) {
+export function OrderDetailsModal({ storeId, order, isOpen, onClose }: OrderDetailsModalProps) {
     const [isUpdating, setIsUpdating] = useState(false);
     const [statusToConfirm, setStatusToConfirm] = useState<string | null>(null);
 
@@ -25,7 +26,7 @@ export function OrderDetailsModal({ order, isOpen, onClose }: OrderDetailsModalP
     const confirmStatusChange = async () => {
         if (statusToConfirm) {
             setIsUpdating(true);
-            await updateOrderStatus(order.id, statusToConfirm);
+            await updateOrderStatus(storeId, order.id, statusToConfirm);
             setIsUpdating(false);
             setStatusToConfirm(null);
             onClose();

@@ -5,11 +5,28 @@ import { DeleteProductButton } from '@/components/admin/delete-product-button';
 import Image from 'next/image';
 import { StockToggle } from '@/components/admin/stock-toggle';
 import { ProductSearch } from '@/components/admin/product-search';
+import { auth } from '@/auth';
+import { prisma } from '@/lib/db';
+import { notFound } from 'next/navigation';
 
 export default async function AdminDashboard(props: { searchParams: Promise<{ query?: string }> }) {
+    const session = await auth();
+    // @ts-ignore
+    if (!session || session?.user?.role !== 'ADMIN') {
+        notFound();
+    }
+
+    const userStore = await prisma.store.findFirst({
+        where: { userId: session.user.id }
+    });
+
+    if (!userStore) {
+        return <div className="p-8 text-center text-red-500">Error: No tienes una tienda asignada a tu cuenta.</div>;
+    }
+
     const searchParams = await props.searchParams;
     const query = searchParams?.query || '';
-    const products = await getProducts(query);
+    const products = await getProducts(userStore.id, query);
 
     return (
         <div className="py-10 px-6 lg:px-40">
@@ -61,7 +78,7 @@ export default async function AdminDashboard(props: { searchParams: Promise<{ qu
                                         </span>
                                     </td>
                                     <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap">
-                                        <StockToggle productId={product.id} initialInStock={product.inStock} />
+                                        <StockToggle storeId={userStore.id} productId={product.id} initialInStock={product.inStock} />
                                     </td>
                                     <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                         ${product.price}
@@ -78,7 +95,7 @@ export default async function AdminDashboard(props: { searchParams: Promise<{ qu
                                                     <span className="hidden md:inline">Editar</span>
                                                 </Link>
                                             </Button>
-                                            <DeleteProductButton productId={product.id} productName={product.name} />
+                                            <DeleteProductButton storeId={userStore.id} productId={product.id} productName={product.name} />
                                         </div>
                                     </td>
                                 </tr>

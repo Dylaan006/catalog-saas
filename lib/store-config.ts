@@ -1,12 +1,21 @@
 import { prisma } from '@/lib/db';
 import { cache } from 'react';
 
-// Cache the result for the duration of the request
-export const getStoreConfig = cache(async () => {
+export const getStoreConfig = cache(async (storeSlug?: string) => {
     try {
-        // @ts-ignore
-        const configs = await prisma.$queryRaw`SELECT * FROM StoreConfig LIMIT 1`;
-        return Array.isArray(configs) ? configs[0] : null;
+        if (!storeSlug) {
+            // En caso de que no haya slug (ej: rutas /admin que buscaremos por auth session luego,
+            // pero para evitar que rompa ahora devolvemos null temporalmente
+            // o podríamos buscar la del usuario logueado en el futuro)
+            return null;
+        }
+
+        const store = await prisma.store.findUnique({
+            where: { slug: storeSlug },
+            include: { storeConfig: true }
+        });
+
+        return store?.storeConfig || null;
     } catch (e) {
         console.error('Failed to fetch store config:', e);
         return null;

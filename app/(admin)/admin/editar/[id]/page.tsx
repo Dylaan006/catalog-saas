@@ -5,7 +5,24 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { auth } from '@/auth';
+import { prisma } from '@/lib/db';
+
 export default async function EditProductPage(props: { params: Promise<{ id: string }> }) {
+    const session = await auth();
+    // @ts-ignore
+    if (!session || session?.user?.role !== 'ADMIN') {
+        notFound();
+    }
+
+    const userStore = await prisma.store.findFirst({
+        where: { userId: session.user.id }
+    });
+
+    if (!userStore) {
+        return <div className="p-8 text-center text-red-500">Error: No tienes una tienda asignada a tu cuenta.</div>;
+    }
+
     const params = await props.params;
     const product = await getProductById(params.id);
 
@@ -13,7 +30,7 @@ export default async function EditProductPage(props: { params: Promise<{ id: str
         notFound();
     }
 
-    const updateProductWithId = updateProduct.bind(null, product.id);
+    const updateProductWithId = updateProduct.bind(null, product.id, userStore.id);
 
     return (
         <div className="py-10 px-6 lg:px-40">

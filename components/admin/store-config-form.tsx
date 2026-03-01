@@ -6,7 +6,7 @@ import { StoreConfigView } from './store-config-view';
 
 
 export interface StoreConfig {
-    id: number;
+    id: string;
     storeName: string;
     description: string;
     logoUrl: string | null;

@@ -4,10 +4,11 @@ import { useState } from 'react';
 import { OrderDetailsModal } from '@/components/admin/order-details-modal';
 
 interface OrdersTableProps {
+    storeId: string;
     orders: any[];
 }
 
-export function OrdersTable({ orders }: OrdersTableProps) {
+export function OrdersTable({ storeId, orders }: OrdersTableProps) {
     const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
 
     return (
@@ -83,6 +84,7 @@ export function OrdersTable({ orders }: OrdersTableProps) {
             </div>
 
             <OrderDetailsModal
+                storeId={storeId}
                 isOpen={!!selectedOrder}
                 order={selectedOrder}
                 onClose={() => setSelectedOrder(null)}

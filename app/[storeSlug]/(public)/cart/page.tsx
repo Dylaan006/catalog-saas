@@ -9,19 +9,30 @@ import { createOrder } from '@/lib/actions';
 import { useRouter } from 'next/navigation';
 import { AlertModal } from '@/components/ui/alert-modal';
 
-export default function CartPage() {
+export default function CartPage({ params }: { params: { storeSlug: string } }) {
     const { items, removeItem, updateQuantity, total, clearCart } = useCartStore();
     const [mounted, setMounted] = useState(false);
     const [isCheckingOut, setIsCheckingOut] = useState(false);
     const router = useRouter();
+    const [storeId, setStoreId] = useState<string | null>(null);
 
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         setMounted(true);
-    }, []);
+        // Fetch storeId for the checkout
+        fetch(`/api/store/${params.storeSlug}`)
+            .then(res => res.json())
+            .then(data => { if (data.storeId) setStoreId(data.storeId) })
+            .catch(console.error)
+    }, [params.storeSlug]);
 
     async function handleCheckout() {
+        if (!storeId) {
+            setError('Error: No se pudo identificar la tienda. Intente recargar.');
+            return;
+        }
+
         setIsCheckingOut(true);
         try {
             // Transform items for the server action
@@ -30,7 +41,7 @@ export default function CartPage() {
                 quantity: item.quantity
             }));
 
-            const result = await createOrder(orderItems, total);
+            const result = await createOrder(storeId, orderItems, total);
 
             if (result.success) {
                 clearCart();

@@ -4,9 +4,9 @@ import bcrypt from 'bcryptjs'
 const prisma = new PrismaClient()
 
 async function main() {
-    // Create Default Admin
+    // Create Default Admin (Store Owner)
     const hashedPassword = await bcrypt.hash('admin123', 10);
-    await prisma.user.upsert({
+    const adminUser = await prisma.user.upsert({
         where: { email: 'admin@stitch.com' },
         update: {},
         create: {
@@ -17,27 +17,55 @@ async function main() {
         },
     });
 
+    // Create a default Store for the admin
+    const store = await prisma.store.upsert({
+        where: { slug: 'pixel-store' },
+        update: {},
+        create: {
+            name: 'PixelStore',
+            slug: 'pixel-store',
+            userId: adminUser.id,
+        },
+    });
+
+    // Create a default StoreConfig
+    await prisma.storeConfig.upsert({
+        where: { storeId: store.id },
+        update: {},
+        create: {
+            storeId: store.id,
+            storeName: 'PixelStore',
+            description: 'La mejor tienda tecnológica SaaS',
+            primaryColor: '#09090b', // Negro moderno
+            secondaryColor: '#ffffff',
+            heroTitle: 'Bienvenido a PixelStore',
+        },
+    });
+
     const products = [
         {
-            name: 'Stitch Peluche Gigante',
-            description: 'Peluche de Stitch de 1 metro de altura, súper suave y abrazable.',
+            name: 'Auriculares Inalámbricos Pro',
+            description: 'Auriculares con cancelación de ruido activa y sonido de alta fidelidad.',
+            price: 150000,
+            category: 'Audio',
+            images: JSON.stringify(['https://placehold.co/600x400/png?text=Auriculares']),
+            storeId: store.id,
+        },
+        {
+            name: 'Teclado Mecánico RGB',
+            description: 'Teclado mecánico para programación y gaming con switches rojos.',
+            price: 85000,
+            category: 'Periféricos',
+            images: JSON.stringify(['https://placehold.co/600x400/png?text=Teclado']),
+            storeId: store.id,
+        },
+        {
+            name: 'Mouse Ergonómico',
+            description: 'Mouse inalámbrico con diseño ergonómico para largas horas de trabajo.',
             price: 45000,
-            category: 'Peluches',
-            images: JSON.stringify(['https://placehold.co/600x400/png?text=Stitch+Peluche']),
-        },
-        {
-            name: 'Taza Stitch 3D',
-            description: 'Taza de cerámica con diseño 3D de la cabeza de Stitch.',
-            price: 8500,
-            category: 'Hogar',
-            images: JSON.stringify(['https://placehold.co/600x400/png?text=Taza+Stitch']),
-        },
-        {
-            name: 'Llavero Stitch y Angel',
-            description: 'Set de 2 llaveros de Stitch y Angel magnéticos.',
-            price: 3200,
-            category: 'Accesorios',
-            images: JSON.stringify(['https://placehold.co/600x400/png?text=Llaveros']),
+            category: 'Periféricos',
+            images: JSON.stringify(['https://placehold.co/600x400/png?text=Mouse']),
+            storeId: store.id,
         },
     ]
 
@@ -47,7 +75,7 @@ async function main() {
         })
     }
 
-    console.log('Seed data inserted')
+    console.log('Seed data inserted for multi-tenant SaaS')
 }
 
 main()
