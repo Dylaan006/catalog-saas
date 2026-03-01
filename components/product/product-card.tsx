@@ -47,13 +47,15 @@ export function ProductCard({ storeSlug, product }: ProductCardProps) {
             {/* Bottom Content - Frosted Glass */}
             <div className="absolute bottom-4 left-4 right-4 z-10 flex flex-col">
                 <div className="backdrop-blur-xl bg-white/10 border border-white/20 p-4 md:p-5 rounded-[1.5rem] shadow-2xl transform translate-y-2 group-hover:translate-y-0 transition-all duration-500">
-                    <div className="flex justify-between items-center mb-2">
-                        <h3 className="text-white text-base md:text-xl font-black leading-tight line-clamp-1 drop-shadow-md">
+                    <div className="flex flex-col gap-2 mb-2 w-full">
+                        <h3 className="text-white text-base md:text-xl font-black leading-tight line-clamp-2 drop-shadow-lg w-full">
                             {product.name}
                         </h3>
-                        <p className="text-white font-black text-sm md:text-lg bg-black/40 px-3 py-1 rounded-full drop-shadow-md whitespace-nowrap ml-2">
-                            {formattedPrice}
-                        </p>
+                        <div className="flex justify-start">
+                            <p className="text-white font-black text-sm md:text-lg bg-black/40 px-3 py-1 rounded-full drop-shadow-md">
+                                {formattedPrice}
+                            </p>
+                        </div>
                     </div>
 
                     <p className="text-gray-200 text-xs md:text-sm line-clamp-2 transform opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-out font-medium drop-shadow-sm h-0 group-hover:h-auto overflow-hidden">
