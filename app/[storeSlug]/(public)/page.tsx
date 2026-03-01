@@ -24,6 +24,7 @@ export default async function Home(props: {
 
   return (
     <HomeView
+      storeSlug={params.storeSlug}
       products={products}
       categories={categories}
       config={config}

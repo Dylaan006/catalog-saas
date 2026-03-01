@@ -4,6 +4,7 @@ import { HeroCarousel } from '@/components/ui/hero-carousel';
 import Link from 'next/link';
 
 interface HomeViewProps {
+    storeSlug: string;
     products: any[];
     categories: string[];
     config: any;
@@ -12,24 +13,24 @@ interface HomeViewProps {
     sort: string;
 }
 
-export function HomeView({ products, categories, config, query, category, sort }: HomeViewProps) {
+export function HomeView({ storeSlug, products, categories, config, query, category, sort }: HomeViewProps) {
     return (
         <div className="flex flex-col w-full">
             {/* Hero Section - Only show if no search/filter is active to keep focus when searching */}
-            {!query && !category && <HeroCarousel config={config} />}
+            {!query && !category && <HeroCarousel config={config} storeSlug={storeSlug} />}
 
-            <main className="flex-1 px-4 lg:px-40 py-8 max-w-[1280px] mx-auto w-full mb-12">
-                <div className="flex flex-col gap-6 mb-8">
+            <main className="flex-1 px-4 lg:px-40 py-12 max-w-[1400px] mx-auto w-full mb-12">
+                <div className="flex flex-col gap-8 mb-10">
                     <div className="w-full">
-                        <form className="flex flex-col min-w-40 h-14 w-full">
-                            <div className="flex w-full flex-1 items-stretch rounded-xl h-full shadow-sm">
-                                <div className="text-gray-400 flex border-none bg-white items-center justify-center pl-5 rounded-l-xl border-r-0">
-                                    <span className="material-symbols-outlined">search</span>
+                        <form className="flex flex-col min-w-40 h-16 w-full max-w-2xl mx-auto">
+                            <div className="flex w-full flex-1 items-stretch rounded-full h-full shadow-sm bg-white/80 backdrop-blur-md border border-gray-200/50 hover:shadow-md transition-shadow duration-300">
+                                <div className="text-gray-400 flex border-none items-center justify-center pl-6 rounded-l-full border-r-0">
+                                    <span className="material-symbols-outlined text-[24px]">search</span>
                                 </div>
                                 <input
                                     name="query"
                                     defaultValue={query}
-                                    className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-xl text-gray-900 focus:outline-0 focus:ring-0 border-none bg-white focus:border-none h-full placeholder:text-gray-400 px-4 text-base font-normal leading-normal"
+                                    className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-full text-gray-900 focus:outline-0 focus:ring-0 border-none bg-transparent focus:border-none h-full placeholder:text-gray-400 px-4 text-lg font-medium leading-normal"
                                     placeholder="Buscar productos..."
                                 />
                                 {/* Maintain category if set */}
@@ -40,18 +41,18 @@ export function HomeView({ products, categories, config, query, category, sort }
                         </form>
                     </div>
 
-                    <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between w-full">
+                    <div className="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between w-full mt-4">
                         {/* Categorias - Scroll Horizontal */}
-                        <div className="flex items-center gap-3 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
-                            <Link href={`/?query=${query}&sort=${sort}`} className="shrink-0">
-                                <div className={`flex h-10 cursor-pointer items-center justify-center gap-x-2 rounded-full px-6 transition-all border border-gray-800 ${category === '' ? 'bg-gray-800 text-white' : 'bg-white text-gray-800 hover:bg-gray-800 hover:text-white'}`}>
-                                    <p className={`text-sm font-bold leading-normal`}>Todos</p>
+                        <div className="flex items-center gap-3 overflow-x-auto w-full md:w-auto pb-4 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
+                            <Link href={`/${storeSlug}?query=${query}&sort=${sort}`} className="shrink-0">
+                                <div className={`flex h-12 cursor-pointer items-center justify-center gap-x-2 rounded-full px-8 transition-all duration-300 border ${category === '' ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20 scale-105' : 'bg-white/60 backdrop-blur-sm text-gray-600 border-gray-200/50 hover:bg-white hover:text-gray-900 hover:shadow-md'}`}>
+                                    <p className={`text-[15px] font-bold tracking-wide`}>Todos</p>
                                 </div>
                             </Link>
                             {categories.map((cat) => (
-                                <Link key={cat} href={`/?category=${cat}&query=${query}&sort=${sort}`} className="shrink-0">
-                                    <div className={`flex h-10 cursor-pointer items-center justify-center gap-x-2 rounded-full px-6 transition-all border border-gray-800 ${category === cat ? 'bg-gray-800 text-white' : 'bg-white text-gray-800 hover:bg-gray-800 hover:text-white'}`}>
-                                        <p className={`text-sm font-bold leading-normal`}>
+                                <Link key={cat} href={`/${storeSlug}?category=${cat}&query=${query}&sort=${sort}`} className="shrink-0">
+                                    <div className={`flex h-12 cursor-pointer items-center justify-center gap-x-2 rounded-full px-8 transition-all duration-300 border ${category === cat ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20 scale-105' : 'bg-white/60 backdrop-blur-sm text-gray-600 border-gray-200/50 hover:bg-white hover:text-gray-900 hover:shadow-md'}`}>
+                                        <p className={`text-[15px] font-bold tracking-wide`}>
                                             {cat}
                                         </p>
                                     </div>
@@ -66,10 +67,10 @@ export function HomeView({ products, categories, config, query, category, sort }
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
                     {products.length > 0 ? (
                         products.map((product) => (
-                            <ProductCard key={product.id} product={product} />
+                            <ProductCard key={product.id} storeSlug={storeSlug} product={product} />
                         ))
                     ) : (
                         <div className="col-span-full text-center py-20 text-gray-500">

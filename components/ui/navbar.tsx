@@ -3,7 +3,7 @@ import { auth } from '@/auth';
 import { CartCounter } from '@/components/cart/cart-counter';
 import { MobileMenu } from '@/components/ui/mobile-menu';
 
-export async function Navbar({ config }: { config?: any }) {
+export async function Navbar({ config, storeSlug }: { config?: any; storeSlug?: string }) {
     const session = await auth();
     const isLoggedIn = !!session?.user;
     // @ts-ignore
@@ -17,7 +17,7 @@ export async function Navbar({ config }: { config?: any }) {
                 <div className="flex items-center gap-2 lg:gap-4 text-gray-900">
                     <MobileMenu isLoggedIn={isLoggedIn} isAdmin={isAdmin} />
 
-                    <Link href="/" className="flex items-center gap-2">
+                    <Link href={`/${storeSlug || ''}`} className="flex items-center gap-2">
                         {config?.logoUrl ? (
                             <img src={config.logoUrl} alt={storeName} className="h-10 w-auto object-contain" />
                         ) : (
@@ -33,7 +33,7 @@ export async function Navbar({ config }: { config?: any }) {
 
                 <div className="flex flex-1 justify-end gap-8 items-center">
                     <nav className="hidden md:flex items-center gap-6">
-                        <Link href="/" className="text-gray-900 text-sm font-semibold leading-normal hover:text-gray-600">
+                        <Link href={`/${storeSlug || ''}`} className="text-gray-900 text-sm font-semibold leading-normal hover:text-gray-600">
                             Catálogo
                         </Link>
 
@@ -60,7 +60,7 @@ export async function Navbar({ config }: { config?: any }) {
                         )}
                     </nav>
                     <div className="flex items-center gap-3">
-                        <CartCounter />
+                        <CartCounter storeSlug={storeSlug} />
                     </div>
                 </div>
             </div>

@@ -14,32 +14,25 @@ interface Slide {
     }
 }
 
-const slides: Slide[] = [
-    {
-        id: 1,
-        title: "Descubre Nuestra Nueva Colección",
-        description: "Encuentra las mejores piezas de diseño y tecnología seleccionadas para elevar tu espacio personal.",
-        image: "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?q=80&w=2070&auto=format&fit=crop", // Sofá verde estilo moderno
-        ctaDetails: { text: "Ver Novedades", href: "/?sort=newest" }
-    },
-    {
-        id: 2,
-        title: "Tecnología que Inspira",
-        description: "Dispositivos de última generación para un estilo de vida conectado y eficiente.",
-        image: "https://images.unsplash.com/photo-1550009158-9ebf69173e03?q=80&w=2001&auto=format&fit=crop", // Setup electronico clean
-        ctaDetails: { text: "Ver Electrónica", href: "/?category=Electrónica" }
-    },
-    {
-        id: 3,
-        title: "Minimalismo para tu Hogar",
-        description: "Muebles y decoración que combinan funcionalidad con una estética impecable.",
-        image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=2158&auto=format&fit=crop", // Muebles minimalistas
-        ctaDetails: { text: "Explorar Decoración", href: "/?category=Decoración" }
-    }
-];
-
-export function HeroCarousel({ config }: { config?: any }) {
+export function HeroCarousel({ config, storeSlug }: { config?: any; storeSlug?: string }) {
     const [currentSlide, setCurrentSlide] = useState(0);
+
+    const slides: Slide[] = [
+        {
+            id: 1,
+            title: "Descubre Nuestra Nueva Colección",
+            description: "Encuentra las mejores piezas de diseño y tecnología seleccionadas para elevar tu espacio personal.",
+            image: "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?q=80&w=2070&auto=format&fit=crop", // Sofá verde estilo moderno
+            ctaDetails: { text: "Ver Electrónica", href: `/${storeSlug || ''}?category=Electrónica` }
+        },
+        {
+            id: 3,
+            title: "Minimalismo para tu Hogar",
+            description: "Muebles y decoración que combinan funcionalidad con una estética impecable.",
+            image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=2158&auto=format&fit=crop", // Muebles minimalistas
+            ctaDetails: { text: "Explorar Decoración", href: `/${storeSlug || ''}?category=Decoración` }
+        }
+    ];
 
     let displaySlides = slides;
     if (config?.heroImageUrls) {
@@ -51,7 +44,7 @@ export function HeroCarousel({ config }: { config?: any }) {
                     title: config.heroTitle || "Bienvenido",
                     description: config.heroSubtitle || "",
                     image: img,
-                    ctaDetails: { text: "Ver Catálogo", href: "/?sort=newest" }
+                    ctaDetails: { text: "Ver Catálogo", href: `/${storeSlug || ''}?sort=newest` }
                 }));
             }
         } catch (e) { }
