@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id             String      @id @default(cuid())
+  name           String
+  description    String
+  price          Float
+  category       String
+  productCode    String?
+  // SQLite does not support scalar lists (String[]). 
+  // We will store images as a JSON stringified array.
+  images         String
+  // JSON stringified array of items
+  boxContent     String      @default("[]")
+  // JSON stringified key-value pairs
+  specifications String      @default("{}")
+  inStock        Boolean     @default(true)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  orderItems     OrderItem[]
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  password    String
+  name        String
+  phoneNumber String?
+  role        String   @default("USER") // ADMIN, USER
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  orders      Order[]
+}
+
+model Order {
+  id        String      @id @default(cuid())
+  total     Float
+  status    String      @default("PENDING") // PENDING, COMPLETED, CANCELLED
+  userId    String
+  user      User        @relation(fields: [userId], references: [id])
+  items     OrderItem[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  quantity    Int
+  price       Float
+  productName String?
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id])
+  productId   String?
+  product     Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+}
+
+model StoreConfig {
+  id          Int     @id @default(1) // Singleton pattern, always ID 1
+  storeName   String  @default("Pixel Catalog")
+  description String  @default("Tienda de productos")
+  logoUrl     String?
+
+  // Appearance
+  primaryColor   String @default("#000000")
+  secondaryColor String @default("#ffffff")
+  fontFamily     String @default("Inter")
+
+  // Hero Section
+  heroTitle     String @default("Bienvenido")
+  heroSubtitle  String @default("Descubre nuestros productos")
+  heroImageUrls String @default("[]") // JSON array
+
+  // Contact & Socials
+  contactEmail   String?
+  contactPhone   String?
+  whatsappNumber String?
+  instagramUrl   String?
+  facebookUrl    String?
+
+  updatedAt DateTime @updatedAt
+}

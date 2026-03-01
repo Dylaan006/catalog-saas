@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Inter', sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-border: var(--border);
+}
+
+/* --- DEFAULT THEME (Minimalist / B&W) --- */
+:root {
+  /* Base */
+  --background: #ffffff;
+  --foreground: #111827;
+
+  /* Primary (Black/Dark Gray) */
+  --primary: #111827;
+  --primary-foreground: #ffffff;
+
+  /* Secondary (Gray) */
+  --secondary: #f3f4f6;
+  --secondary-foreground: #1f2937;
+
+  /* Accent (Subtle Gray) */
+  --accent: #f9fafb;
+  --accent-foreground: #111827;
+
+  /* Card */
+  --card: #ffffff;
+  --card-foreground: #111827;
+
+  /* Border */
+  --border: #e5e7eb;
+}
+
+/* --- VIBRANT THEME (Colorful / Pop) --- */
+.theme-vibrant {
+  /* Base */
+  --background: #fff1f2;
+  /* Rose 50 */
+  --foreground: #4c0519;
+  /* Rose 950 */
+
+  /* Primary (Pink/Rose) */
+  --primary: #e11d48;
+  /* Rose 600 */
+  --primary-foreground: #ffffff;
+
+  /* Secondary (Peach/Orange) */
+  --secondary: #ffedd5;
+  /* Orange 100 */
+  --secondary-foreground: #9a3412;
+  /* Orange 800 */
+
+  /* Accent (Yellow) */
+  --accent: #fef08a;
+  /* Yellow 200 */
+  --accent-foreground: #854d0e;
+  /* Yellow 800 */
+
+  /* Card */
+  --card: #ffffff;
+  --card-foreground: #881337;
+  /* Rose 900 */
+
+  /* Border */
+  --border: #fecdd3;
+  /* Rose 200 */
+}
+
+/* --- ELEGANT THEME (Dark / Gold) --- */
+.theme-elegant {
+  /* Base */
+  --background: #0f172a;
+  /* Slate 900 */
+  --foreground: #f8fafc;
+  /* Slate 50 */
+
+  /* Primary (Gold/Amber) */
+  --primary: #d97706;
+  /* Amber 600 */
+  --primary-foreground: #ffffff;
+
+  /* Secondary (Slate) */
+  --secondary: #1e293b;
+  /* Slate 800 */
+  --secondary-foreground: #e2e8f0;
+  /* Slate 200 */
+
+  /* Accent (Darker Slate) */
+  --accent: #334155;
+  /* Slate 700 */
+  --accent-foreground: #f1f5f9;
+  /* Slate 100 */
+
+  /* Card */
+  --card: #1e293b;
+  /* Slate 800 */
+  --card-foreground: #f8fafc;
+  /* Slate 50 */
+
+  /* Border */
+  --border: #334155;
+  /* Slate 700 */
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
