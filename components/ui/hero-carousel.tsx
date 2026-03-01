@@ -20,17 +20,18 @@ export function HeroCarousel({ config, storeSlug }: { config?: any; storeSlug?: 
     const slides: Slide[] = [
         {
             id: 1,
-            title: "Descubre Nuestra Nueva Colección",
-            description: "Encuentra las mejores piezas de diseño y tecnología seleccionadas para elevar tu espacio personal.",
-            image: "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?q=80&w=2070&auto=format&fit=crop", // Sofá verde estilo moderno
-            ctaDetails: { text: "Ver Electrónica", href: `/${storeSlug || ''}?category=Electrónica` }
+            title: "iPhone 15 Pro. Forjado en Titanio.",
+            description: "El nuevo chip A17 Pro. Una victoria monumental para el rendimiento y la eficiencia en la palma de tu mano.",
+            // Using a tech product image since we can't get the exact transparent iphone render right now
+            image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?q=80&w=2070&auto=format&fit=crop",
+            ctaDetails: { text: "Comprar", href: `/${storeSlug || ''}?category=Electrónica` }
         },
         {
-            id: 3,
-            title: "Minimalismo para tu Hogar",
-            description: "Muebles y decoración que combinan funcionalidad con una estética impecable.",
-            image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=2158&auto=format&fit=crop", // Muebles minimalistas
-            ctaDetails: { text: "Explorar Decoración", href: `/${storeSlug || ''}?category=Decoración` }
+            id: 2,
+            title: "MacBook Pro M3",
+            description: "Alucinante. Y punto. La laptop pro más avanzada del mundo. Ahora con la familia de chips M3.",
+            image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1926&auto=format&fit=crop",
+            ctaDetails: { text: "Comprar", href: `/${storeSlug || ''}?category=Electrónica` }
         }
     ];
 
@@ -65,40 +66,54 @@ export function HeroCarousel({ config, storeSlug }: { config?: any; storeSlug?: 
     }, [displaySlides.length]); // Add dependency
 
     return (
-        <div className="relative w-full h-[500px] md:h-[600px] overflow-hidden bg-gray-900 group">
+        <div className="relative w-full overflow-hidden bg-[#05050A] group xl:rounded-[2.5rem] xl:mx-auto max-w-[1400px] xl:mb-10 xl:mt-4 shadow-2xl min-h-[500px] md:min-h-[600px] flex items-center">
+            {/* Background Glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/20 blur-[120px] rounded-full pointer-events-none opacity-50"></div>
+
             {/* Slides */}
             {displaySlides.map((slide, index) => (
                 <div
                     key={slide.id}
-                    className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
-                        }`}
+                    className={`absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out flex items-center ${index === currentSlide ? 'opacity-100 x-0 z-10 scale-100' : 'opacity-0 scale-95 z-0 pointer-events-none'}`}
                 >
-                    {/* Background Image with Overlay */}
-                    <div
-                        className="absolute inset-0 bg-cover bg-center"
-                        style={{ backgroundImage: `url(${slide.image})` }}
-                    >
-                        {/* Dark Overlay Gradient */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
-                    </div>
-
-                    {/* Content */}
-                    <div className="relative z-20 h-full max-w-[1280px] mx-auto px-4 lg:px-40 flex items-center">
-                        <div className="max-w-2xl text-white space-y-6 animate-fade-in-up">
-                            <h2 className="text-4xl md:text-6xl font-bold leading-tight tracking-tight">
-                                {slide.title}
+                    <div className="relative z-20 h-full w-full max-w-[1200px] mx-auto px-6 lg:px-12 flex flex-col md:flex-row items-center py-12 md:py-0">
+                        {/* Left Content */}
+                        <div className="w-full md:w-[55%] text-white space-y-6 animate-fade-in-up pr-0 md:pr-8 mb-10 md:mb-0">
+                            <h2 className="text-5xl md:text-7xl font-black leading-[1.1] tracking-[-0.04em] text-white">
+                                {slide.title.split('. ').map((part, i, arr) => (
+                                    <span key={i} className={i === 1 ? 'text-gray-400 block' : 'block'}>
+                                        {part}{i !== arr.length - 1 && '.'}
+                                    </span>
+                                ))}
                             </h2>
-                            <p className="text-lg md:text-xl text-gray-200 font-medium leading-relaxed max-w-lg">
+                            <p className="text-lg md:text-xl text-gray-300 font-medium leading-relaxed max-w-lg mt-4">
                                 {slide.description}
                             </p>
-                            <div className="pt-4">
+                            <div className="pt-6 flex flex-wrap gap-4">
                                 <Link
                                     href={slide.ctaDetails.href}
-                                    className="inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-4 rounded-full font-bold text-sm hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                                    className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-full font-bold text-[15px] transition-colors"
                                 >
                                     {slide.ctaDetails.text}
-                                    <span className="material-symbols-outlined text-sm">arrow_forward</span>
                                 </Link>
+                                <Link
+                                    href={slide.ctaDetails.href}
+                                    className="inline-flex items-center justify-center bg-transparent border border-gray-600 text-white hover:bg-white/10 px-8 py-3 rounded-full font-bold text-[15px] transition-colors"
+                                >
+                                    Más información
+                                </Link>
+                            </div>
+                        </div>
+
+                        {/* Right Image */}
+                        <div className="w-full md:w-[45%] h-full flex justify-center items-center relative">
+                            <div className="relative w-full max-w-[500px] aspect-[4/3] md:aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl border border-white/5">
+                                <img
+                                    src={slide.image}
+                                    alt={slide.title}
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-tr from-black/40 to-transparent"></div>
                             </div>
                         </div>
                     </div>

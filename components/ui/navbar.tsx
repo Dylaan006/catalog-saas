@@ -12,8 +12,8 @@ export async function Navbar({ config, storeSlug }: { config?: any; storeSlug?: 
     const storeName = config?.storeName || 'CatalogPro';
 
     return (
-        <header className="sticky top-0 z-50 bg-white backdrop-blur-md border-b border-solid border-gray-200 px-4 lg:px-40 py-3">
-            <div className="flex items-center justify-between whitespace-nowrap max-w-[1200px] mx-auto w-full">
+        <header className="sticky top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-solid border-gray-200/50 px-4 xl:px-8 py-3">
+            <div className="flex items-center justify-between whitespace-nowrap max-w-[1400px] mx-auto w-full">
                 <div className="flex items-center gap-2 lg:gap-4 text-gray-900">
                     <MobileMenu isLoggedIn={isLoggedIn} isAdmin={isAdmin} />
 
@@ -31,34 +31,42 @@ export async function Navbar({ config, storeSlug }: { config?: any; storeSlug?: 
                     </Link>
                 </div>
 
-                <div className="flex flex-1 justify-end gap-8 items-center">
-                    <nav className="hidden md:flex items-center gap-6">
-                        <Link href={`/${storeSlug || ''}`} className="text-gray-900 text-sm font-semibold leading-normal hover:text-gray-600">
-                            Catálogo
+                <div className="hidden md:flex flex-1 justify-center items-center gap-10">
+                    <Link href={`/${storeSlug || ''}`} className="text-gray-600 text-[13px] font-semibold tracking-wide hover:text-gray-900 transition-colors">
+                        Modelos
+                    </Link>
+                    <Link href={`/${storeSlug || ''}?category=Accesorios`} className="text-gray-600 text-[13px] font-semibold tracking-wide hover:text-gray-900 transition-colors">
+                        Accesorios
+                    </Link>
+                    <Link href={`/${storeSlug || ''}?category=Soporte`} className="text-gray-600 text-[13px] font-semibold tracking-wide hover:text-gray-900 transition-colors">
+                        Soporte
+                    </Link>
+                    {/* Admin Links */}
+                    {isAdmin && (
+                        <>
+                            <Link href="/admin/productos" className="text-primary text-[13px] font-semibold tracking-wide hover:text-primary/80 transition-colors">
+                                Admin Prods
+                            </Link>
+                            <Link href="/admin/ordenes" className="text-primary text-[13px] font-semibold tracking-wide hover:text-primary/80 transition-colors">
+                                Admin Órdenes
+                            </Link>
+                        </>
+                    )}
+                </div>
+
+                <div className="flex flex-1 justify-end gap-5 items-center">
+                    <button className="text-gray-600 hover:text-gray-900 transition-colors flex items-center justify-center">
+                        <span className="material-symbols-outlined text-xl">search</span>
+                    </button>
+                    {session?.user ? (
+                        <Link href="/profile" className="text-gray-600 hover:text-gray-900 transition-colors flex items-center justify-center">
+                            <span className="material-symbols-outlined text-xl">person</span>
                         </Link>
-
-                        {/* Admin Links */}
-                        {isAdmin && (
-                            <>
-                                <Link href="/admin/productos" className="text-gray-900 text-sm font-semibold leading-normal hover:text-gray-600">
-                                    Productos
-                                </Link>
-                                <Link href="/admin/ordenes" className="text-gray-900 text-sm font-semibold leading-normal hover:text-gray-600">
-                                    Órdenes
-                                </Link>
-                            </>
-                        )}
-
-                        {session?.user ? (
-                            <Link href="/profile" className="text-gray-900 text-sm font-medium leading-normal hover:text-gray-600 transition-colors">
-                                Mi Perfil
-                            </Link>
-                        ) : (
-                            <Link href="/login" className="text-gray-500 text-sm font-medium leading-normal hover:text-gray-900 transition-colors">
-                                Ingresar
-                            </Link>
-                        )}
-                    </nav>
+                    ) : (
+                        <Link href="/login" className="text-gray-600 hover:text-gray-900 transition-colors flex items-center justify-center">
+                            <span className="material-symbols-outlined text-xl">person</span>
+                        </Link>
+                    )}
                     <div className="flex items-center gap-3">
                         <CartCounter storeSlug={storeSlug} />
                     </div>
