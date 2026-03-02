@@ -1,29 +1,27 @@
 'use client';
 
 import { useActionState } from 'react';
-import { authenticate } from '@/lib/auth-actions';
+import { storeAuthenticate } from '@/lib/auth-actions';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 
-export function LoginForm() {
-    const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get('callbackUrl') || '/';
+interface StoreLoginFormProps {
+    storeSlug: string;
+    callbackUrl: string;
+}
 
+export function StoreLoginForm({ storeSlug, callbackUrl }: StoreLoginFormProps) {
     const [errorMessage, dispatch, isPending] = useActionState(
-        authenticate,
+        storeAuthenticate,
         undefined,
     );
 
     return (
         <form action={dispatch} className="flex flex-col gap-4">
-            {/* Pass callbackUrl through the form so the server action uses it */}
+            <input type="hidden" name="storeSlug" value={storeSlug} />
             <input type="hidden" name="callbackUrl" value={callbackUrl} />
 
             <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-gray-900" htmlFor="email">
-                    Email
-                </label>
+                <label className="text-sm font-semibold text-gray-900" htmlFor="email">Email</label>
                 <input
                     className="w-full rounded-lg border border-gray-200 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 p-3 text-sm outline-none"
                     id="email"
@@ -34,9 +32,7 @@ export function LoginForm() {
                 />
             </div>
             <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-gray-900" htmlFor="password">
-                    Contraseña
-                </label>
+                <label className="text-sm font-semibold text-gray-900" htmlFor="password">Contraseña</label>
                 <input
                     className="w-full rounded-lg border border-gray-200 focus:border-gray-900 focus:ring-1 focus:ring-gray-900 p-3 text-sm outline-none"
                     id="password"
@@ -47,11 +43,7 @@ export function LoginForm() {
                     minLength={6}
                 />
             </div>
-            <div
-                className="flex h-8 items-end space-x-1"
-                aria-live="polite"
-                aria-atomic="true"
-            >
+            <div className="flex h-8 items-end" aria-live="polite" aria-atomic="true">
                 {errorMessage && (
                     <p className="text-sm text-red-500 font-medium">{errorMessage}</p>
                 )}

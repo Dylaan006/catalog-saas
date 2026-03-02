@@ -47,15 +47,19 @@ model Product {
 
 model User {
   id          String   @id @default(cuid())
-  email       String   @unique
+  email       String
   password    String
   name        String
   phoneNumber String?
-  role        String   @default("USER") // SUPERADMIN, ADMIN, USER
+  role        String   @default("USER") // ADMIN, USER
+  // storeId is null for store owners/admins, set for store customers
+  storeId     String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   stores      Store[] // A user can own multiple stores (if ADMIN)
   orders      Order[] // A user can make multiple orders (as customer)
+
+  @@unique([email, storeId]) // Same email can register in different stores
 }
 
 model Order {

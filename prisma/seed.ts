@@ -7,13 +7,14 @@ async function main() {
     // Create Default Admin (Store Owner)
     const hashedPassword = await bcrypt.hash('admin123', 10);
     const adminUser = await prisma.user.upsert({
-        where: { email: 'admin@stitch.com' },
+        where: { email_storeId: { email: 'admin@stitch.com', storeId: '' } },
         update: {},
         create: {
             email: 'admin@stitch.com',
             name: 'Admin User',
             password: hashedPassword,
             role: 'ADMIN',
+            storeId: null,
         },
     });
 
