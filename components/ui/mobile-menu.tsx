@@ -7,11 +7,14 @@ import { usePathname } from 'next/navigation';
 interface MobileMenuProps {
     isLoggedIn: boolean;
     isAdmin?: boolean;
+    storeSlug?: string;
 }
 
-export function MobileMenu({ isLoggedIn, isAdmin }: MobileMenuProps) {
+export function MobileMenu({ isLoggedIn, isAdmin, storeSlug }: MobileMenuProps) {
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
+
+    const base = storeSlug ? `/${storeSlug}` : '';
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -68,19 +71,37 @@ export function MobileMenu({ isLoggedIn, isAdmin }: MobileMenuProps) {
                         )}
 
                         <Link
-                            href="/"
+                            href={base || '/'}
                             onClick={() => setIsOpen(false)}
-                            className={`p-4 rounded-xl font-bold flex items-center gap-3 transition-colors ${pathname === '/' ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50'}`}
+                            className={`p-4 rounded-xl font-bold flex items-center gap-3 transition-colors ${pathname === (base || '/') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50'}`}
                         >
                             <span className="material-symbols-outlined">storefront</span>
                             Catálogo
                         </Link>
 
+                        <Link
+                            href={`${base}?category=Accesorios`}
+                            onClick={() => setIsOpen(false)}
+                            className="p-4 rounded-xl font-bold flex items-center gap-3 transition-colors text-gray-600 hover:bg-gray-50"
+                        >
+                            <span className="material-symbols-outlined">category</span>
+                            Accesorios
+                        </Link>
+
+                        <Link
+                            href={`${base}?category=Tecnología`}
+                            onClick={() => setIsOpen(false)}
+                            className="p-4 rounded-xl font-bold flex items-center gap-3 transition-colors text-gray-600 hover:bg-gray-50"
+                        >
+                            <span className="material-symbols-outlined">devices</span>
+                            Tecnología
+                        </Link>
+
                         {isLoggedIn ? (
                             <Link
-                                href="/profile"
+                                href={`${base}/profile`}
                                 onClick={() => setIsOpen(false)}
-                                className={`p-4 rounded-xl font-bold flex items-center gap-3 transition-colors ${pathname === '/profile' ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50'}`}
+                                className={`p-4 rounded-xl font-bold flex items-center gap-3 transition-colors ${pathname.includes('/profile') ? 'bg-gray-100 text-gray-900' : 'text-gray-600 hover:bg-gray-50'}`}
                             >
                                 <span className="material-symbols-outlined">person</span>
                                 Mi Perfil

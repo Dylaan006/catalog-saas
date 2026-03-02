@@ -22,24 +22,24 @@ export function HomeView({ storeSlug, products, categories, config, query, categ
                     <HeroCarousel config={config} storeSlug={storeSlug} />
 
                     {/* Features Row */}
-                    <div className="bg-white py-6 w-full mt-4 xl:mt-0 xl:-translate-y-6">
-                        <div className="max-w-[1200px] mx-auto px-4 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6 md:gap-4">
-                            <div className="flex items-center gap-3">
-                                <span className="material-symbols-outlined text-blue-600 bg-blue-50 p-2 rounded-lg">local_shipping</span>
+                    <div className="bg-white py-5 w-full">
+                        <div className="max-w-[1200px] mx-auto px-4 lg:px-8 grid grid-cols-1 sm:grid-cols-3 gap-5 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
+                            <div className="flex items-center gap-3 py-3 sm:py-0 sm:px-4">
+                                <span className="material-symbols-outlined text-blue-600 bg-blue-50 p-2 rounded-lg shrink-0">local_shipping</span>
                                 <div>
                                     <h4 className="text-gray-900 font-bold text-sm">Envío Gratis</h4>
                                     <p className="text-gray-500 text-xs">En todos tus pedidos nacionales</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-3">
-                                <span className="material-symbols-outlined text-blue-600 bg-blue-50 p-2 rounded-lg">verified_user</span>
+                            <div className="flex items-center gap-3 py-3 sm:py-0 sm:px-4">
+                                <span className="material-symbols-outlined text-blue-600 bg-blue-50 p-2 rounded-lg shrink-0">verified_user</span>
                                 <div>
                                     <h4 className="text-gray-900 font-bold text-sm">Garantía Oficial</h4>
                                     <p className="text-gray-500 text-xs">Respaldo directo oficial</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-3">
-                                <span className="material-symbols-outlined text-blue-600 bg-blue-50 p-2 rounded-lg">sync_alt</span>
+                            <div className="flex items-center gap-3 py-3 sm:py-0 sm:px-4">
+                                <span className="material-symbols-outlined text-blue-600 bg-blue-50 p-2 rounded-lg shrink-0">sync_alt</span>
                                 <div>
                                     <h4 className="text-gray-900 font-bold text-sm">Plan Canje</h4>
                                     <p className="text-gray-500 text-xs">Recibimos tu equipo usado</p>
@@ -112,31 +112,29 @@ export function HomeView({ storeSlug, products, categories, config, query, categ
                 </div>
 
                 {/* Promotional Banner */}
-                <div className="w-full bg-gradient-to-r from-slate-900 to-slate-800 rounded-3xl p-8 md:p-16 flex flex-col md:flex-row items-center justify-between shadow-2xl overflow-hidden relative border border-slate-700">
+                <div className="w-full bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl md:rounded-3xl p-6 md:p-16 flex flex-col md:flex-row items-center justify-between shadow-2xl overflow-hidden relative border border-slate-700">
                     {/* Decorative Blur */}
-                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/20 blur-[100px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+                    <div className="absolute top-0 right-0 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-blue-500/20 blur-[80px] md:blur-[100px] rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
 
                     <div className="relative z-10 w-full md:w-1/2 pr-0 md:pr-10">
-                        <p className="text-blue-400 text-xs font-bold tracking-widest uppercase mb-3 text-start">Personaliza tu Estilo</p>
-                        <h2 className="text-4xl md:text-5xl font-black text-white leading-tight mb-4 text-start">
-                            Accesorios<br className="hidden md:block" />Originales
+                        <p className="text-blue-400 text-xs font-bold tracking-widest uppercase mb-2 md:mb-3">Personaliza tu Estilo</p>
+                        <h2 className="text-3xl md:text-5xl font-black text-white leading-tight mb-3 md:mb-4">
+                            Accesorios<br className="hidden md:block" /> Originales
                         </h2>
-                        <p className="text-slate-300 font-medium mb-8 text-start max-w-sm">
+                        <p className="text-slate-300 font-medium mb-6 md:mb-8 max-w-sm text-sm md:text-base">
                             Desde fundas protectoras hasta cargadores magnéticos. Todo lo que necesitas para potenciar tu experiencia diaria.
                         </p>
                         <Link
                             href={`/${storeSlug || ''}?category=Accesorios`}
-                            className="inline-flex bg-white hover:bg-gray-100 text-slate-900 px-8 py-4 rounded-full font-bold transition-all shadow-lg transform hover:-translate-y-1"
+                            className="inline-flex bg-white hover:bg-gray-100 text-slate-900 px-6 md:px-8 py-3 md:py-4 rounded-full font-bold transition-all shadow-lg text-sm md:text-base"
                         >
                             Ver catálogo de accesorios
                         </Link>
                     </div>
 
-                    <div className="relative z-10 w-full md:w-1/2 mt-10 md:mt-0 flex justify-end">
-                        {/* Placeholder generic image for accessories banner since we don't have the exact render */}
-                        <div className="w-full max-w-sm aspect-video bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 backdrop-blur-sm shadow-xl relative overflow-hidden">
+                    <div className="relative z-10 w-full md:w-1/2 mt-8 md:mt-0 flex justify-center md:justify-end">
+                        <div className="w-full max-w-xs md:max-w-sm aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-xl">
                             <img src="https://images.unsplash.com/photo-1603921385966-231920875b15?q=80&w=1968&auto=format&fit=crop" alt="Accesorios" className="w-full h-full object-cover opacity-80" />
-                            <div className="absolute inset-0 bg-gradient-to-l from-transparent to-slate-900/90 hidden md:block"></div>
                         </div>
                     </div>
                 </div>

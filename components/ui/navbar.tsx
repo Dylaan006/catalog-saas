@@ -10,14 +10,16 @@ export async function Navbar({ config, storeSlug }: { config?: any; storeSlug?: 
     const isAdmin = session?.user?.role === 'ADMIN';
 
     const storeName = config?.storeName || 'CatalogPro';
+    // Build a safe base URL that always includes the storeSlug
+    const base = storeSlug ? `/${storeSlug}` : '';
 
     return (
         <header className="sticky top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-solid border-gray-200/50 px-4 xl:px-8 py-3">
             <div className="flex items-center justify-between whitespace-nowrap max-w-[1400px] mx-auto w-full">
                 <div className="flex items-center gap-2 lg:gap-4 text-gray-900">
-                    <MobileMenu isLoggedIn={isLoggedIn} isAdmin={isAdmin} />
+                    <MobileMenu isLoggedIn={isLoggedIn} isAdmin={isAdmin} storeSlug={storeSlug} />
 
-                    <Link href={`/${storeSlug || ''}`} className="flex items-center gap-2">
+                    <Link href={base || '/'} className="flex items-center gap-2">
                         {config?.logoUrl ? (
                             <img src={config.logoUrl} alt={storeName} className="h-10 w-auto object-contain" />
                         ) : (
@@ -31,39 +33,33 @@ export async function Navbar({ config, storeSlug }: { config?: any; storeSlug?: 
                     </Link>
                 </div>
 
+                {/* Centered nav links — all tenant-aware */}
                 <div className="hidden md:flex flex-1 justify-center items-center gap-10">
-                    <Link href={`/${storeSlug || ''}`} className="text-gray-600 text-[13px] font-semibold tracking-wide hover:text-gray-900 transition-colors">
-                        Modelos
+                    <Link href={base || '/'} className="text-gray-600 text-[13px] font-semibold tracking-wide hover:text-gray-900 transition-colors">
+                        Catálogo
                     </Link>
-                    <Link href={`/${storeSlug || ''}?category=Accesorios`} className="text-gray-600 text-[13px] font-semibold tracking-wide hover:text-gray-900 transition-colors">
+                    <Link href={`${base}?category=Accesorios`} className="text-gray-600 text-[13px] font-semibold tracking-wide hover:text-gray-900 transition-colors">
                         Accesorios
                     </Link>
-                    <Link href={`/${storeSlug || ''}?category=Soporte`} className="text-gray-600 text-[13px] font-semibold tracking-wide hover:text-gray-900 transition-colors">
-                        Soporte
+                    <Link href={`${base}?category=Tecnología`} className="text-gray-600 text-[13px] font-semibold tracking-wide hover:text-gray-900 transition-colors">
+                        Tecnología
                     </Link>
-                    {/* Admin Links */}
+                    {/* Admin Links — /admin routes don't need storeSlug */}
                     {isAdmin && (
-                        <>
-                            <Link href="/admin/productos" className="text-primary text-[13px] font-semibold tracking-wide hover:text-primary/80 transition-colors">
-                                Admin Prods
-                            </Link>
-                            <Link href="/admin/ordenes" className="text-primary text-[13px] font-semibold tracking-wide hover:text-primary/80 transition-colors">
-                                Admin Órdenes
-                            </Link>
-                        </>
+                        <Link href="/admin/productos" className="text-primary text-[13px] font-semibold tracking-wide hover:text-primary/80 transition-colors">
+                            Admin
+                        </Link>
                     )}
                 </div>
 
+                {/* Right side icons */}
                 <div className="flex flex-1 justify-end gap-5 items-center">
-                    <button className="text-gray-600 hover:text-gray-900 transition-colors flex items-center justify-center">
-                        <span className="material-symbols-outlined text-xl">search</span>
-                    </button>
                     {session?.user ? (
-                        <Link href="/profile" className="text-gray-600 hover:text-gray-900 transition-colors flex items-center justify-center">
+                        <Link href={`${base}/profile`} className="text-gray-600 hover:text-gray-900 transition-colors flex items-center justify-center">
                             <span className="material-symbols-outlined text-xl">person</span>
                         </Link>
                     ) : (
-                        <Link href="/login" className="text-gray-600 hover:text-gray-900 transition-colors flex items-center justify-center">
+                        <Link href={`${base}/login`} className="text-gray-600 hover:text-gray-900 transition-colors flex items-center justify-center">
                             <span className="material-symbols-outlined text-xl">person</span>
                         </Link>
                     )}
