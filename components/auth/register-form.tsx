@@ -86,10 +86,6 @@ export function RegisterForm() {
             <Button className="w-full bg-gray-900 text-white font-bold h-12 hover:bg-gray-800" aria-disabled={isPending}>
                 {isPending ? 'Registrando...' : 'Crear Cuenta'}
             </Button>
-
-            <p className="text-center text-sm text-gray-500 mt-4">
-                ¿Ya tienes cuenta? <Link href="/login" className="font-bold text-gray-900 hover:underline">Ingresa</Link>
-            </p>
         </form>
     );
 }

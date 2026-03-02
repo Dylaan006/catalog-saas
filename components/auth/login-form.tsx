@@ -52,10 +52,6 @@ export function LoginForm() {
             <Button className="w-full bg-gray-900 text-white font-bold h-12 hover:bg-gray-800" aria-disabled={isPending}>
                 {isPending ? 'Ingresando...' : 'Ingresar'}
             </Button>
-
-            <p className="text-center text-sm text-gray-500 mt-4">
-                ¿No tienes cuenta? <Link href="/register" className="font-bold text-gray-900 hover:underline">Regístrate</Link>
-            </p>
         </form>
     );
 }

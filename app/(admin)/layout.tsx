@@ -2,7 +2,7 @@ import { Navbar } from '@/components/ui/navbar';
 import { Footer } from '@/components/ui/footer';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/db';
-import { notFound } from 'next/navigation';
+import { redirect } from 'next/navigation';
 
 export default async function AdminLayout({
     children,
@@ -12,7 +12,7 @@ export default async function AdminLayout({
     const session = await auth();
     // @ts-ignore
     if (!session || session?.user?.role !== 'ADMIN') {
-        notFound();
+        redirect('/login');
     }
 
     const userStore = await prisma.store.findFirst({
@@ -21,10 +21,11 @@ export default async function AdminLayout({
     });
 
     const config = userStore?.storeConfig;
+    const storeSlug = userStore?.slug;
 
     return (
         <div className="flex flex-col min-h-screen">
-            <Navbar config={config || undefined} />
+            <Navbar config={config || undefined} storeSlug={storeSlug} />
             <main className="flex-1 w-full bg-gray-50/50">
                 {children}
             </main>
