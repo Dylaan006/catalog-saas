@@ -3,13 +3,15 @@
 import { useCartStore } from '@/lib/cart-store';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 
 import { createOrder } from '@/lib/actions';
 import { useRouter } from 'next/navigation';
 import { AlertModal } from '@/components/ui/alert-modal';
 
-export default function CartPage({ params }: { params: { storeSlug: string } }) {
+export default function CartPage({ params }: { params: Promise<{ storeSlug: string }> }) {
+    // Next.js 15: params is a Promise in client components, must use React.use()
+    const { storeSlug } = use(params);
     const { items, removeItem, updateQuantity, total, clearCart } = useCartStore();
     const [mounted, setMounted] = useState(false);
     const [isCheckingOut, setIsCheckingOut] = useState(false);
@@ -21,11 +23,11 @@ export default function CartPage({ params }: { params: { storeSlug: string } }) 
     useEffect(() => {
         setMounted(true);
         // Fetch storeId for the checkout
-        fetch(`/api/store/${params.storeSlug}`)
+        fetch(`/api/store/${storeSlug}`)
             .then(res => res.json())
             .then(data => { if (data.storeId) setStoreId(data.storeId) })
             .catch(console.error)
-    }, [params.storeSlug]);
+    }, [storeSlug]);
 
     async function handleCheckout() {
         if (!storeId) {
@@ -45,7 +47,7 @@ export default function CartPage({ params }: { params: { storeSlug: string } }) 
 
             if (result.success) {
                 clearCart();
-                router.push('/profile');
+                router.push(`/${storeSlug}/profile`);
             } else {
                 if (result.error?.includes('iniciar sesión')) {
                     router.push('/login');
@@ -79,7 +81,7 @@ export default function CartPage({ params }: { params: { storeSlug: string } }) 
                         <h2 className="text-xl font-bold text-gray-900 mb-2">Tu carrito está vacío</h2>
                         <p className="text-gray-500 mb-6">Parece que aún no has agregado productos.</p>
                         <Button asChild className="rounded-full bg-gray-900 text-white font-bold px-8 py-3 h-auto hover:bg-gray-800">
-                            <Link href="/">Ir al Catálogo</Link>
+                            <Link href={`/${storeSlug}`}>Ir al Catálogo</Link>
                         </Button>
                     </div>
                 ) : (
@@ -157,7 +159,7 @@ export default function CartPage({ params }: { params: { storeSlug: string } }) 
                             </div>
                             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                                 <Button asChild variant="outline" className="w-full sm:w-auto border-gray-200 text-gray-700 font-bold h-12 rounded-full">
-                                    <Link href="/">Seguir Comprando</Link>
+                                    <Link href={`/${storeSlug}`}>Seguir Comprando</Link>
                                 </Button>
                                 <Button
                                     onClick={handleCheckout}
